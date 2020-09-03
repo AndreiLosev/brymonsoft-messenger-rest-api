@@ -5,8 +5,13 @@ const User = mongoose.model('User');
 
 const createUser = (req, res) => User.create(req.body)
   // .exec()
-  .then((createProduct) => res.json(createProduct))
+  .then((user) => res.json({message: 'user created', user: user}))
   .catch(err => res.status(500).json(err))
+
+const userUpdate = (req, res) => User.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
+	.exec()
+	.then((user) => res.json(user))
+	.catch(err => res.status(500).json(err))
 
 const getAllUsers = (req, res) => User.find()
 	.exec()
@@ -17,9 +22,22 @@ const removeUser = (req, res) => User.deleteOne({name: req.params.name})
 	.exec()
 	.then((products) => res.json(products))
 	.catch(err => res.status(500).json(err))
-	
+
+const getFindUsers = async (req, res) => {
+	const search = new RegExp(`${req.params.searchParam}`, 'i');
+	const users1 = await User.find({name: search}).exec();
+	if (users1.length) return res.json(users1);
+	const users2 = await User.find({phone: search}).exec();
+	return res.json(users2) 
+
+};
+
 module.exports = {
 	getAllUsers,
 	createUser,
+	userUpdate,
 	removeUser,
+	getFindUsers,
+	User,
 };
+
