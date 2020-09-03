@@ -13,7 +13,7 @@ const userUpdate = (req, res) => User.findOneAndUpdate({_id: req.params.id}, req
 	.then((user) => res.json(user))
 	.catch(err => res.status(500).json(err))
 
-const getAllUsers = (req, res) => User.find()
+const getUsers = (req, res) => User.find({_id: req.params.id}, {password: 0})
 	.exec()
 	.then((users) => res.json(users))
 	.catch(err => res.status(500).json(err))
@@ -33,7 +33,7 @@ const getFindUsers = async (req, res) => {
 };
 
 module.exports = {
-	getAllUsers,
+	getUsers,
 	createUser,
 	userUpdate,
 	removeUser,

@@ -9,14 +9,13 @@ module.exports = (app) => {
 	app.post('/signin', auth.signIn);
 
 	// users
-	app.get('/user', authMiddleware, user.getAllUsers);
+	app.get('/user/:id', authMiddleware, user.getUsers);
 	app.post('/user', authMiddleware, user.createUser);
 	app.put('/user/:id', authMiddleware, user.userUpdate);
 	app.delete('/user/:id', authMiddleware, user.removeUser);
 	app.get('/find/:searchParam', authMiddleware, user.getFindUsers);
 
 	// message
-	app.get('/message', authMiddleware, message.getAll)
 	app.post('/message', authMiddleware, message.createMessage);
 	app.delete('/message/:id', authMiddleware, message.removeMessage);
 	app.put('/message', authMiddleware, message.getMessage)

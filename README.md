@@ -29,25 +29,21 @@
     BODY: {name: String, password: String}
     RESPONSE {token: <session token>}
 
-###  `Получить всех пользователей`
+###  `Получить пользователя`
 
     METOD: GET
-    URL: <hostname>/user
+    URL: <hostname>/user/<user id>
     HEADERS:
 			Content-Type: application/json
 			Authorization:  <session token>
     BODY: 
     RESPONSE: 
-		[
 			{
 				_id: mongoose.Schema.Types.ObjectId,
 				name: String,
-				password: String,
 				"phone"?: String, // onli 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
 				"avatar"?: String,
-			},
-			.....
-		]
+			}
 
 ###  `Создать пользователя`
 
@@ -128,3 +124,80 @@
 			},
 			.....
 		]
+
+###		`Отправить сообщени`
+
+METOD: POST
+    URL: <hostname>/message
+    HEADERS:
+			Content-Type: application/json
+			Authorization:  <session token>
+    BODY:
+		{
+			text: String,
+			authorID: mongoose.Schema.Types.ObjectId, // автор сообщеня
+			recipientID: mongoose.Schema.Types.ObjectId, // получатель сообшения
+		}
+
+    RESPONSE:
+			{
+				"_id": <message id>,
+				"text": String
+				"authorID": <user id>,
+				"recipientID": <user id>,
+				"added": true,
+				"viewed": false,
+				"created": "2020-09-03T17:43:00.091Z",
+			}
+
+###		`Получить диалог с пользователем`
+
+METOD: PUT
+    URL: <hostname>/message
+    HEADERS:
+			Content-Type: application/json
+			Authorization:  <session token>
+    BODY:
+		{
+			"userID": "5f50ae13b9eb57cbb132666a", //текщий пользователь
+			"interlocutorID": "5f50b12e30c049ce47359a43" // собеседник пользователя
+		}
+
+    RESPONSE: // массив сообщений отсортерованный по дате 
+		[
+				{
+						"_id": "5f50c20704954ddfc175bc22",
+						"text": "привет я админ давай дружить",
+						"authorID": "5f50ae13b9eb57cbb132666a",
+						"recipientID": "5f50b12e30c049ce47359a43",
+						"added": true,
+						"viewed": true,
+						"created": "2020-09-03T10:14:31.658Z",
+						"__v": 0,
+						"name": "admin",
+						"avatar": "http:\\1111"
+				},
+				{
+						"_id": "5f50c23404954ddfc175bc23",
+						"text": "привет, меня заут Никида, а как завут тебя",
+						"authorID": "5f50b12e30c049ce47359a43",
+						"recipientID": "5f50ae13b9eb57cbb132666a",
+						"created": "2020-09-03T10:15:16.705Z",
+						"__v": 0,
+						"name": "Nikita",
+						"avatar": "http:\\1111"
+				},
+			.....
+		]
+
+
+###		`Удалить сообщение`
+
+		METOD: Delete
+    URL: <hostname>/message/<id сообщения>
+    HEADERS:
+			Content-Type: application/json
+			Authorization:  <session token>
+    BODY:
+
+		RESPONSE:	{"message": "message removed"}

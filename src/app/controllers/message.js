@@ -4,11 +4,6 @@ const {User} = require('./users');
 
 const Message = mongoose.model('Message');
 
-const getAll = (req, res) => Message.find()
-  .exec()
-  .then((messages) => res.json(messages))
-	.catch(err => res.status(500).json(err))
-
 const getMessage = async (req, res) => {
 	try {
 		await Message.updateMany({authorID: req.body.interlocutorID, recipientID: req.body.userID, viewed: false}, {viewed: true}).exec()
@@ -18,6 +13,7 @@ const getMessage = async (req, res) => {
 			User.find({_id: req.body.userID}, {name: 1, avatar: 1}),
 			User.find({_id: req.body.interlocutorID}, {name: 1, avatar: 1}),
 		]);
+
 		const posts = [...messages[0], ...messages[1]]
 			.sort((a, b) => +a.created - +b.created)
 			.map(item => {
@@ -32,23 +28,16 @@ const getMessage = async (req, res) => {
 }
 
 const createMessage = (req, res) =>  Message.create({...req.body, added: true, viewed: false})
-  // .exec()
 	.then((message) => res.json(message))
   .catch(err => res.status(500).json(err))
 
-// const update = (req, res) => Product.findOneAndUpdate({id: req.params.id}, req.body)
-//     .exec()
-//     .then((product) => res.json(product))
-//     .catch(err => res.status(500).json(err))
-
 const removeMessage = (req, res) => Message.deleteOne({_id: req.params.id})
   .exec()
-  .then((message) => res.json(message))
+  .then(() => res.json({message: "message removed"}))
   .catch(err => res.status(500).json(err))
 
 module.exports = {
 	getMessage,
 	createMessage,
 	removeMessage,
-	getAll,
 };
