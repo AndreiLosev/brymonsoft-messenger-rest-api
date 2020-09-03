@@ -12,7 +12,7 @@ module.exports = (app) => {
 	app.get('/user', authMiddleware, user.getAllUsers);
 	app.post('/user', authMiddleware, user.createUser);
 	app.put('/user/:id', authMiddleware, user.userUpdate);
-	app.delete('/user/:name', authMiddleware, user.removeUser);
+	app.delete('/user/:id', authMiddleware, user.removeUser);
 	app.get('/find/:searchParam', authMiddleware, user.getFindUsers);
 
 	// message
